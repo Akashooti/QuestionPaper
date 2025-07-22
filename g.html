@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KLE BCA Question Paper Generator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .logo-preview {
+      height: 60px;
+      margin: 5px;
+    }
+    .section-heading {
+      background: #e9ecef;
+      padding: 10px;
+      margin: 20px 0 10px;
+      font-weight: bold;
+      border-left: 4px solid #0d6efd;
+    }
+    .mcq-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin: 5px 0;
+    }
+    .mcq-option {
+      flex: 1;
+      min-width: 200px;
+    }
+    .two-column {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+    }
+    .divider {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: #ccc;
+    }
+    .remove-btn {
+      float: right;
+      margin-top: 10px;
+    }
+    .mcq-options.block-layout {
+  display: block;
+}
+
+.mcq-options.block-layout .mcq-option {
+  display: block;
+  width: 100%;
+  margin: 3px 0;
+  padding: 2px 0;
+}
+
+.mcq-options.horizontal-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 5px 0;
+}
+
+.mcq-options.horizontal-layout .mcq-option {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Option length detection helper */
+.long-options {
+  display: block !important;
+}
+
+.long-options .mcq-option {
+  display: block !important;
+  width: 100% !important;
+  margin: 3px 0 !important;
+}
+.question-block {
+  position: relative;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.remove-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 12px;
+  padding: 2px 6px;
+}
+.page-divider {
+  border-top: 2px solid #000;
+  margin: 20px 0;
+  page-break-inside: avoid;
+}
+
+.marks-display {
+  text-align: right;
+  font-weight: bold;
+  margin: 10px 0;
+  padding: 5px;
+  border: 1px solid #ccc;
+  background: #f8f9fa;
+}
+.paper-details, .questions-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.paper-details h3, .questions-section h3 {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.2em;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 50px;
+}
+
+.generate-btn {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+    display: block;
+    margin: 20px auto;
+    transition: all 0.3s ease;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+}
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container my-4">
+    
+    <h1 class="text-center mb-5 fs-6"><img src="./logo.png" height="200px" /><button type="button" class="btn btn-info">KLE BCA College Gangavathi Question Paper Generator</button>
+</h1>
+    <button type="button" class="btn btn-warning">Designed by Akash Ooti</button>
+
+  
+
+
+    <div class="bg-white p-4 rounded shadow-sm mb-4">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <input type="text" id="collegeName" class="form-control" placeholder="College Name (centered on top)">
+        </div>
+        <div class="col-md-6">
+          <input type="text" id="department" class="form-control" placeholder="Exam type  or internal exam name">
+        </div>
+        <div class="col-md-6">
+          <input type="text" id="subject" class="form-control" placeholder="Subject Name">
+        </div>
+        <div class="col-md-6">
+          <input type="text" id="date" class="form-control" placeholder="Date">
+        </div>
+        <div class="col-md-6">
+  <input type="text" id="time" class="form-control" placeholder="Time (e.g., 10:00 AM)">
+</div>
+
+        <div class="col-md-6">
+          <label class="form-label">Left Logo:</label>
+          <input type="file" id="leftLogo" accept="image/*" class="form-control">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Right Logo:</label>
+          <input type="file" id="rightLogo" accept="image/*" class="form-control">
+        </div>
+      </div>
+      <br>
+      <div class="col-md-6">
+  <input type="text" id="marksDisplay" class="form-control" placeholder="Marks calculation (e.g., 5*3=15)">
+</div>
+<br>
+<br>
+<div class="col-md-6">
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="dualPaper">
+    <label class="form-check-label" for="dualPaper">
+      Enable Dual Papers (Two papers per page)
+    </label>
+  </div>
+</div>
+    </div>
+
+    <div class="bg-white p-4 rounded shadow-sm mb-4">
+      <div class="mb-3">
+        <label class="form-label">Select Layout:</label>
+        <select id="layoutMode" class="form-select">
+          <option value="two">Double Column</option>
+          <option value="single">Single Column</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">MCQ Heading:</label>
+        <input type="text" id="headingMCQ" class="form-control" placeholder="e.g. Choose the correct answer (1 Mark each)">
+        <div class="form-check form-check-inline mt-2">
+          <input class="form-check-input" type="checkbox" id="mcqBold">
+          <label class="form-check-label" for="mcqBold">Bold</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="mcqUnderline">
+          <label class="form-check-label" for="mcqUnderline">Underline</label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">2 Marks Heading:</label>
+        <input type="text" id="heading2" class="form-control" placeholder="e.g. Answer any four (2 Marks each)">
+        <div class="form-check form-check-inline mt-2">
+          <input class="form-check-input" type="checkbox" id="h2Bold">
+          <label class="form-check-label" for="h2Bold">Bold</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="h2Underline">
+          <label class="form-check-label" for="h2Underline">Underline</label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">5 Marks Heading:</label>
+        <input type="text" id="heading5" class="form-control" placeholder="e.g. Answer any three (5 Marks each)">
+        <div class="form-check form-check-inline mt-2">
+          <input class="form-check-input" type="checkbox" id="h5Bold">
+          <label class="form-check-label" for="h5Bold">Bold</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="h5Underline">
+          <label class="form-check-label" for="h5Underline">Underline</label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">10 Marks Heading:</label>
+        <input type="text" id="heading10" class="form-control" placeholder="e.g. Answer any one (10 Marks each)">
+        <div class="form-check form-check-inline mt-2">
+          <input class="form-check-input" type="checkbox" id="h10Bold">
+          <label class="form-check-label" for="h10Bold">Bold</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="h10Underline">
+          <label class="form-check-label" for="h10Underline">Underline</label>
+        </div>
+      </div>
+    </div>
+      
+
+    <div class="bg-white p-4 rounded shadow-sm mb-4">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Question Type</label>
+          <select id="questionType" class="form-select" onchange="renderQuestionForm()">
+            <option value="mcq">Objective (MCQ)</option>
+            <option value="desc">Descriptive (2/5/10 marks)</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Questions Per Page</label>
+          <input type="number" id="questionsPerPage" min="1" value="20" class="form-control" placeholder="e.g. 25">
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="bg-white p-4 rounded shadow-sm mb-4" id="questionForm">
+      <!-- Dynamic Form (MCQ / DESC) will be injected here -->
+    </div>
+
+    <h2 class="text-center my-4">Preview</h2>
+    <div class="bg-white p-4 rounded shadow-sm mb-4" id="preview"></div>
+
+    <div class="text-center">
+  <button class="btn btn-primary me-2" onclick="shuffleAndRender()">🔀 Shuffle Questions</button>
+  <button class="btn btn-success me-2" onclick="downloadPDF()">📄 Download PDF</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<!-- <button class="btn btn-secondary me-2" onclick="generatePortraitPreview()">👁️ Preview Portrait</button>
+<button class="btn btn-warning me-2" onclick="downloadPortraitPDF()">📄 Download Portrait PDF</button> -->
+  <button class="btn btn-danger" onclick="clearSession()">🗑 Clear Saved Data</button>
+ <a href="st.html" class="btn btn-info">Click here for IA structure question paper</a>
+
+</div>
+
+  </div>
+
+
+
+
+  <!-- JavaScript (already in your original code, retain full logic) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    ['marksDisplay'].forEach(persistField);
+    let questions = [];
+const savedQuestions = sessionStorage.getItem("questions");
+if (savedQuestions) {
+  questions = JSON.parse(savedQuestions);
+}
+
+    let logos = {};
+
+    function getImageBase64(fileInput, callback) {
+      const file = fileInput.files[0];
+      if (!file) return callback(null);
+      const reader = new FileReader();
+      reader.onload = () => callback(reader.result);
+      reader.readAsDataURL(file);
+    }
+// ✅ FULL FINAL CODE FOR HORIZONTAL STYLE QUESTION PAPER (TWO COPIES IN ONE PDF)
+
+// Function to render preview with two vertically stacked question papers
+// 1. ADD THIS NEW FUNCTION (Portrait PDF Generator)
+// Replace your downloadPortraitPDF function with this optimized version
+// Helper function to safely get element values
+function safeGetValue(elementId, defaultValue = '') {
+    const element = document.getElementById(elementId);
+    return element ? element.value : defaultValue;
+}
+
+async function downloadPortraitPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('portrait', 'mm', 'a4');
+    
+    // Safely get all form values
+    const collegeName = safeGetValue('collegeName', 'K.L.E Society\'s');
+    const department = safeGetValue('department', 'Bachelor of Computer Applications');
+    const location = safeGetValue('locationText', 'Waddarahatti, Gangavathi-583235');
+    const classText = safeGetValue('classText', 'BCA 1ST Sem');
+    const examType = safeGetValue('examType', 'IA-2');
+    const subject = safeGetValue('subject', 'Sub:');
+    const date = safeGetValue('date', 'Date:');
+    const time = safeGetValue('time', 'Time:');
+    const totalMarks = safeGetValue('totalMarks', '40');
+    
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const margin = 8;
+    const centerX = pageWidth / 2;
+    
+    function generatePortraitPaper(startY) {
+        let currentY = startY;
+        
+        // Header - College Name (Bigger font size)
+        doc.setFontSize(50);
+        doc.setFont(undefined, 'bold');
+        doc.text(collegeName, centerX, currentY, { align: 'center' });
+        currentY += 6;
+        
+        // Department
+        doc.setFontSize(12);
+        doc.text(department, centerX, currentY, { align: 'center' });
+        currentY += 5;
+        
+        // Location
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text(location, centerX, currentY, { align: 'center' });
+        currentY += 5;
+        
+        // Class, Exam Type, Subject line
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'bold');
+        doc.text(`Class: ${classText}`, margin, currentY);
+        doc.text(examType, centerX, currentY, { align: 'center' });
+        doc.text(subject, pageWidth - margin, currentY, { align: 'right' });
+        currentY += 4;
+        
+        // Date, Time, Marks line
+        doc.text(date, margin, currentY);
+        doc.text(time, centerX, currentY, { align: 'center' });
+        doc.text(`Marks: ${totalMarks}`, pageWidth - margin, currentY, { align: 'right' });
+        currentY += 4;
+        
+        // Horizontal line separator
+        doc.setLineWidth(0.5);
+        doc.line(margin, currentY, pageWidth - margin, currentY);
+        currentY += 5;
+        
+        // Generate sections with good spacing
+        currentY = generatePortraitSection(doc, margin, currentY, 'I', 'section1');
+        currentY += 4;
+        currentY = generatePortraitSection(doc, margin, currentY, 'II', 'section2');
+        currentY += 4;
+        currentY = generatePortraitSection(doc, margin, currentY, 'III', 'section3');
+        
+        return currentY + 5;
+    }
+    
+    function generatePortraitSection(doc, margin, startY, sectionNum, sectionId) {
+        let currentY = startY;
+        
+        // Section header with custom instructions
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        let sectionTitle = '';
+        if (sectionNum === 'I') {
+            sectionTitle = safeGetValue('section1_title', 'I. Answer ALL questions (6 × 2 = 12 marks)');
+        } else if (sectionNum === 'II') {
+            sectionTitle = safeGetValue('section2_title', 'II. Answer ANY FIVE questions (5 × 4 = 20 marks)');
+        } else if (sectionNum === 'III') {
+            sectionTitle = safeGetValue('section3_title', 'III. Answer ANY TWO questions (2 × 4 = 8 marks)');
+        }
+        doc.text(sectionTitle, margin, currentY);
+        currentY += 8;
+        
+        // Generate actual questions
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(9);
+        
+        // Get questions from input fields or use defaults
+        let questions = [];
+        if (sectionNum === 'I') {
+            questions = [
+                safeGetValue('q1_1', '1. Define Computer Science.'),
+                safeGetValue('q1_2', '2. What is an Algorithm?'),
+                safeGetValue('q1_3', '3. Explain the term "Data Structure".'),
+                safeGetValue('q1_4', '4. Define Programming Language.'),
+                safeGetValue('q1_5', '5. What is Software Engineering?'),
+                safeGetValue('q1_6', '6. Explain Database Management System.')
+            ];
+        } else if (sectionNum === 'II') {
+            questions = [
+                safeGetValue('q2_1', '1. Explain the different types of computer networks.'),
+                safeGetValue('q2_2', '2. Describe the software development life cycle.'),
+                safeGetValue('q2_3', '3. What are the advantages of object-oriented programming?'),
+                safeGetValue('q2_4', '4. Explain the concept of normalization in databases.'),
+                safeGetValue('q2_5', '5. Describe different sorting algorithms with examples.')
+            ];
+        } else if (sectionNum === 'III') {
+            questions = [
+                safeGetValue('q3_1', '1. Discuss the evolution of computer systems and their impact on society.'),
+                safeGetValue('q3_2', '2. Analyze the role of artificial intelligence in modern computing applications.')
+            ];
+        }
+        
+        for (let i = 0; i < questions.length; i++) {
+            // Split long questions into multiple lines if needed
+            const maxWidth = pageWidth - margin - 10;
+            const lines = doc.splitTextToSize(questions[i], maxWidth);
+            
+            // Print each line of the question
+            for (let j = 0; j < lines.length; j++) {
+                doc.text(lines[j], margin + 5, currentY);
+                currentY += 4;
+            }
+            
+            // Add some space after each question
+            currentY += 2;
+        }
+        
+        return currentY;
+    }
+    
+    // Generate first paper - start a bit higher
+    const firstPaperEnd = generatePortraitPaper(10);
+    
+    // Calculate exact center for divider to fit both papers
+    const availableHeight = pageHeight - 15; // Leave margin at bottom
+    const totalContentHeight = firstPaperEnd - 10;
+    const secondPaperHeight = totalContentHeight; // Same height for second paper
+    
+    // Place divider to fit both papers optimally
+    const dividerY = Math.min(pageHeight / 2 - 2, firstPaperEnd + 2);
+    
+    // Add divider line between papers
+    doc.setLineWidth(1);
+    doc.setDrawColor(0, 0, 0);
+    doc.line(margin, dividerY, pageWidth - margin, dividerY);
+    
+    // Add scissors symbol for cutting
+    doc.setFontSize(10);
+    doc.text('✂', centerX - 2, dividerY - 1);
+    
+    // Generate second paper with optimal spacing
+    generatePortraitPaper(dividerY + 5);
+    
+    doc.save("portrait-question-paper.pdf");
+}
+
+// Preview function - opens PDF in new tab instead of downloading
+function generatePortraitPreview() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('portrait', 'mm', 'a4');
+    
+    // Safely get all form values
+    const collegeName = safeGetValue('collegeName', 'K.L.E Society\'s');
+    const department = safeGetValue('department', 'Bachelor of Computer Applications');
+    const location = safeGetValue('locationText', 'Waddarahatti, Gangavathi-583235');
+    const classText = safeGetValue('classText', 'BCA 1ST Sem');
+    const examType = safeGetValue('examType', 'IA-2');
+    const subject = safeGetValue('subject', 'Sub:');
+    const date = safeGetValue('date', 'Date:');
+    const time = safeGetValue('time', 'Time:');
+    const totalMarks = safeGetValue('totalMarks', '40');
+    
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const margin = 8;
+    const centerX = pageWidth / 2;
+    
+    function generatePortraitPaper(startY) {
+        let currentY = startY;
+        
+        // Header - College Name (Bigger font size)
+        doc.setFontSize(15);
+        doc.setFont(undefined, 'bold');
+        doc.text(collegeName, centerX, currentY, { align: 'center' });
+        currentY += 6;
+        
+        // Department
+        doc.setFontSize(12);
+        doc.text(department, centerX, currentY, { align: 'center' });
+        currentY += 5;
+        
+        // Location
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text(location, centerX, currentY, { align: 'center' });
+        currentY += 5;
+        
+        // Class, Exam Type, Subject line
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'bold');
+        doc.text(`Class: ${classText}`, margin, currentY);
+        doc.text(examType, centerX, currentY, { align: 'center' });
+        doc.text(subject, pageWidth - margin, currentY, { align: 'right' });
+        currentY += 4;
+        
+        // Date, Time, Marks line
+        doc.text(date, margin, currentY);
+        doc.text(time, centerX, currentY, { align: 'center' });
+        doc.text(`Marks: ${totalMarks}`, pageWidth - margin, currentY, { align: 'right' });
+        currentY += 4;
+        
+        // Horizontal line separator
+        doc.setLineWidth(0.5);
+        doc.line(margin, currentY, pageWidth - margin, currentY);
+        currentY += 5;
+        
+        // Generate sections with good spacing
+        currentY = generatePortraitSection(doc, margin, currentY, 'I', 'section1');
+        currentY += 1;
+        currentY = generatePortraitSection(doc, margin, currentY, 'II', 'section2');
+        currentY += 1;
+        currentY = generatePortraitSection(doc, margin, currentY, 'III', 'section3');
+        
+        return currentY + 5;
+    }
+    
+    function generatePortraitSection(doc, margin, startY, sectionNum, sectionId) {
+        let currentY = startY;
+        
+        // Section header with custom instructions
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        let sectionTitle = '';
+        if (sectionNum === 'I') {
+            sectionTitle = safeGetValue('section1_title', 'I. Answer ALL questions (6 × 2 = 12 marks)');
+        } else if (sectionNum === 'II') {
+            sectionTitle = safeGetValue('section2_title', 'II. Answer ANY FIVE questions (5 × 4 = 20 marks)');
+        } else if (sectionNum === 'III') {
+            sectionTitle = safeGetValue('section3_title', 'III. Answer ANY TWO questions (2 × 4 = 8 marks)');
+        }
+        doc.text(sectionTitle, margin, currentY);
+        currentY += 8;
+        
+        // Generate actual questions
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(9);
+        
+        // Get questions from input fields or use defaults
+        let questions = [];
+        if (sectionNum === 'I') {
+            questions = [
+                safeGetValue('q1_1', '1. Define Computer Science.'),
+                safeGetValue('q1_2', '2. What is an Algorithm?'),
+                safeGetValue('q1_3', '3. Explain the term "Data Structure".'),
+                safeGetValue('q1_4', '4. Define Programming Language.'),
+                safeGetValue('q1_5', '5. What is Software Engineering?'),
+                safeGetValue('q1_6', '6. Explain Database Management System.')
+            ];
+        } else if (sectionNum === 'II') {
+            questions = [
+                safeGetValue('q2_1', '1. Explain the different types of computer networks.'),
+                safeGetValue('q2_2', '2. Describe the software development life cycle.'),
+                safeGetValue('q2_3', '3. What are the advantages of object-oriented programming?'),
+                safeGetValue('q2_4', '4. Explain the concept of normalization in databases.'),
+                safeGetValue('q2_5', '5. Describe different sorting algorithms with examples.')
+            ];
+        } else if (sectionNum === 'III') {
+            questions = [
+                safeGetValue('q3_1', '1. Discuss the evolution of computer systems and their impact on society.'),
+                safeGetValue('q3_2', '2. Analyze the role of artificial intelligence in modern computing applications.')
+            ];
+        }
+        
+       for (let i = 0; i < questions.length; i++) {
+    const questionNumber = (i + 1) + '. ';
+    const fullText = questionNumber + questions[i].replace(/^\d+\.\s*/, ''); // remove existing number if any
+    const maxWidth = pageWidth - margin - 10;
+    const lines = doc.splitTextToSize(fullText, maxWidth);
+
+    for (let j = 0; j < lines.length; j++) {
+        doc.text(lines[j], margin + 5, currentY);
+        currentY += 4;
+    }
+
+    currentY += 2;
+}
+        
+        return currentY;
+    }
+    
+    // Generate first paper - start a bit higher
+    const firstPaperEnd = generatePortraitPaper(10);
+    
+    // Calculate exact center for divider to fit both papers
+    const availableHeight = pageHeight - 15; // Leave margin at bottom
+    const totalContentHeight = firstPaperEnd - 10;
+    const secondPaperHeight = totalContentHeight; // Same height for second paper
+    
+    // Place divider to fit both papers optimally
+    const dividerY = Math.min(pageHeight / 2 - 2, firstPaperEnd + 2);
+    
+    // Add divider line between papers
+    doc.setLineWidth(1);
+    doc.setDrawColor(0, 0, 0);
+    doc.line(margin, dividerY, pageWidth - margin, dividerY);
+    
+    // Add scissors symbol for cutting
+    doc.setFontSize(10);
+    doc.text('✂', centerX - 2, dividerY - 1);
+    
+    // Generate second paper with optimal spacing
+    generatePortraitPaper(dividerY + 5);
+    
+    // Open PDF in new tab for preview instead of downloading
+    const pdfBlob = doc.output('blob');
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    window.open(pdfUrl, '_blank');
+}
+
+// Additional helper functions that might be referenced elsewhere in your code
+function generatePortraitPreviewHTML() {
+    try {
+        return generatePortraitPreview();
+    } catch (error) {
+        console.error('Error in generatePortraitPreviewHTML:', error);
+        return '';
+    }
+}
+
+function generatePortraitSectionPreview(sectionNum) {
+    try {
+        console.log(`Generating preview for section ${sectionNum}`);
+        
+        // Get section title safely
+        let sectionTitle = '';
+        if (sectionNum === 'I' || sectionNum === '1' || sectionNum === 1) {
+            sectionTitle = safeGetValue('section1_title', 'I. Answer ALL questions (6 × 2 = 12 marks)');
+        } else if (sectionNum === 'II' || sectionNum === '2' || sectionNum === 2) {
+            sectionTitle = safeGetValue('section2_title', 'II. Answer ANY FIVE questions (5 × 4 = 20 marks)');
+        } else if (sectionNum === 'III' || sectionNum === '3' || sectionNum === 3) {
+            sectionTitle = safeGetValue('section3_title', 'III. Answer ANY TWO questions (2 × 4 = 8 marks)');
+        }
+        
+        // Safe element access for previews
+        let questions = [];
+        if (sectionNum === 'I' || sectionNum === '1' || sectionNum === 1) {
+            questions = [
+                safeGetValue('q1_1', '1. Define Computer Science.'),
+                safeGetValue('q1_2', '2. What is an Algorithm?'),
+                safeGetValue('q1_3', '3. Explain the term "Data Structure".'),
+                safeGetValue('q1_4', '4. Define Programming Language.'),
+                safeGetValue('q1_5', '5. What is Software Engineering?'),
+                safeGetValue('q1_6', '6. Explain Database Management System.')
+            ];
+        } else if (sectionNum === 'II' || sectionNum === '2' || sectionNum === 2) {
+            questions = [
+                safeGetValue('q2_1', '1. Explain the different types of computer networks.'),
+                safeGetValue('q2_2', '2. Describe the software development life cycle.'),
+                safeGetValue('q2_3', '3. What are the advantages of object-oriented programming?'),
+                safeGetValue('q2_4', '4. Explain the concept of normalization in databases.'),
+                safeGetValue('q2_5', '5. Describe different sorting algorithms with examples.')
+            ];
+        } else if (sectionNum === 'III' || sectionNum === '3' || sectionNum === 3) {
+            questions = [
+                safeGetValue('q3_1', '1. Discuss the evolution of computer systems and their impact on society.'),
+                safeGetValue('q3_2', '2. Analyze the role of artificial intelligence in modern computing applications.')
+            ];
+        }
+        
+        // Return formatted preview
+        return sectionTitle + '\n\n' + questions.join('\n\n');
+        
+    } catch (error) {
+        console.error('Error in generatePortraitSectionPreview:', error);
+        return `Error generating preview for section ${sectionNum}`;
+    }
+}
+
+// Alternative function names that might be called
+function generatePortraitPreview() {
+    try {
+        const { jsPDF } = window.jspdf;
+        if (!jsPDF) {
+            console.error('jsPDF library not found');
+            alert('PDF library not loaded. Please refresh the page.');
+            return;
+        }
+        
+        const doc = new jsPDF('portrait', 'mm', 'a4');
+        
+        // Safely get all form values
+        const collegeName = safeGetValue('collegeName', 'K.L.E Society\'s');
+        const department = safeGetValue('department', 'Bachelor of Computer Applications');
+        const location = safeGetValue('locationText', 'Waddarahatti, Gangavathi-583235');
+        const classText = safeGetValue('classText', 'BCA 1ST Sem');
+        const examType = safeGetValue('examType', 'IA-2');
+        const subject = safeGetValue('subject', 'Sub:');
+        const date = safeGetValue('date', 'Date:');
+        const time = safeGetValue('time', 'Time:');
+        const totalMarks = safeGetValue('totalMarks', '40');
+        
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 8;
+        const centerX = pageWidth / 2;
+        
+        function generatePortraitPaper(startY) {
+            let currentY = startY;
+            
+            // Header - College Name (Bigger font size)
+            doc.setFontSize(15);
+            doc.setFont(undefined, 'bold');
+            doc.text(collegeName, centerX, currentY, { align: 'center' });
+            currentY += 6;
+            
+            // Department
+            doc.setFontSize(12);
+            doc.text(department, centerX, currentY, { align: 'center' });
+            currentY += 5;
+            
+            // Location
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.text(location, centerX, currentY, { align: 'center' });
+            currentY += 5;
+            
+            // Class, Exam Type, Subject line
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'bold');
+            doc.text(`Class: ${classText}`, margin, currentY);
+            doc.text(examType, centerX, currentY, { align: 'center' });
+            doc.text(subject, pageWidth - margin, currentY, { align: 'right' });
+            currentY += 4;
+            
+            // Date, Time, Marks line
+            doc.text(date, margin, currentY);
+            doc.text(time, centerX, currentY, { align: 'center' });
+            doc.text(`Marks: ${totalMarks}`, pageWidth - margin, currentY, { align: 'right' });
+            currentY += 4;
+            
+            // Horizontal line separator
+            doc.setLineWidth(0.5);
+            doc.line(margin, currentY, pageWidth - margin, currentY);
+            currentY += 5;
+            
+            // Generate sections with good spacing
+            currentY = generatePortraitSectionInPDF(doc, margin, currentY, 'I', 'section1');
+            currentY += 4;
+            currentY = generatePortraitSectionInPDF(doc, margin, currentY, 'II', 'section2');
+            currentY += 4;
+            currentY = generatePortraitSectionInPDF(doc, margin, currentY, 'III', 'section3');
+            
+            return currentY + 5;
+        }
+        
+        function generatePortraitSectionInPDF(doc, margin, startY, sectionNum, sectionId) {
+            let currentY = startY;
+            
+            // Section header with custom instructions
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            let sectionTitle = '';
+            if (sectionNum === 'I') {
+                sectionTitle = safeGetValue('section1_title', 'I. Answer ALL questions (6 × 2 = 12 marks)');
+            } else if (sectionNum === 'II') {
+                sectionTitle = safeGetValue('section2_title', 'II. Answer ANY FIVE questions (5 × 4 = 20 marks)');
+            } else if (sectionNum === 'III') {
+                sectionTitle = safeGetValue('section3_title', 'III. Answer ANY TWO questions (2 × 4 = 8 marks)');
+            }
+            doc.text(sectionTitle, margin, currentY);
+            currentY += 8;
+            
+            // Generate actual questions
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(9);
+            
+            // Get questions from input fields or use defaults
+            let questions = [];
+            if (sectionNum === 'I') {
+                questions = [
+                    safeGetValue('q1_1', '1. Define Computer Science.'),
+                    safeGetValue('q1_2', '2. What is an Algorithm?'),
+                    safeGetValue('q1_3', '3. Explain the term "Data Structure".'),
+                    safeGetValue('q1_4', '4. Define Programming Language.'),
+                    safeGetValue('q1_5', '5. What is Software Engineering?'),
+                    safeGetValue('q1_6', '6. Explain Database Management System.')
+                ];
+            } else if (sectionNum === 'II') {
+                questions = [
+                    safeGetValue('q2_1', '1. Explain the different types of computer networks.'),
+                    safeGetValue('q2_2', '2. Describe the software development life cycle.'),
+                    safeGetValue('q2_3', '3. What are the advantages of object-oriented programming?'),
+                    safeGetValue('q2_4', '4. Explain the concept of normalization in databases.'),
+                    safeGetValue('q2_5', '5. Describe different sorting algorithms with examples.')
+                ];
+            } else if (sectionNum === 'III') {
+                questions = [
+                    safeGetValue('q3_1', '1. Discuss the evolution of computer systems and their impact on society.'),
+                    safeGetValue('q3_2', '2. Analyze the role of artificial intelligence in modern computing applications.')
+                ];
+            }
+            
+           for (let i = 0; i < questions.length; i++) {
+    const questionNumber = (i + 1) + '. ';
+    const fullText = questionNumber + questions[i].replace(/^\d+\.\s*/, ''); // remove existing number if any
+    const maxWidth = pageWidth - margin - 10;
+    const lines = doc.splitTextToSize(fullText, maxWidth);
+
+    for (let j = 0; j < lines.length; j++) {
+        doc.text(lines[j], margin + 5, currentY);
+        currentY += 4;
+    }
+
+    currentY += 2;
+}
+            
+            return currentY;
+        }
+        
+        // Generate first paper - start a bit higher
+        const firstPaperEnd = generatePortraitPaper(10);
+        
+        // Calculate exact center for divider to fit both papers
+        const dividerY = Math.min(pageHeight / 2 - 2, firstPaperEnd + 2);
+        
+        // Add divider line between papers
+        doc.setLineWidth(1);
+        doc.setDrawColor(0, 0, 0);
+        doc.line(margin, dividerY, pageWidth - margin, dividerY);
+        
+        // Add scissors symbol for cutting
+        doc.setFontSize(10);
+        doc.text('✂', centerX - 2, dividerY - 1);
+        
+        // Generate second paper with optimal spacing
+        generatePortraitPaper(dividerY + 5);
+        
+        // Open PDF in new tab for preview instead of downloading
+        const pdfBlob = doc.output('blob');
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, '_blank');
+        
+    } catch (error) {
+        console.error('Error in generatePortraitPreview:', error);
+        alert('Error generating preview. Please check the console for details.');
+    }
+}
+
+// Replace your generatePortraitSection function with this optimized version
+
+// 3. ADD THIS BUTTON TO YOUR HTML (Replace existing button section)
+/*
+<div class="text-center">
+  <button class="btn btn-primary me-2" onclick="shuffleAndRender()">🔀 Shuffle Questions</button>
+  <button class="btn btn-success me-2" onclick="downloadPDF()">📄 Download PDF</button>
+  <button class="btn btn-info me-2" onclick="downloadHorizontalPDF()">📄 Download Horizontal PDF</button>
+  <button class="btn btn-warning me-2" onclick="downloadPortraitPDF()">📄 Download Portrait PDF</button>
+  <button class="btn btn-danger" onclick="clearSession()">🗑 Clear Saved Data</button>
+</div>
+*/
+
+// 4. MODIFY PREVIEW FUNCTION (Add this section to your renderPreview function)
+
+
+// 5. ADD THIS HELPER FOR PREVIEW
+
+// 6. ADD THIS SECTION PREVIEW HELPER
+
+
+// Add event listeners for real-time preview updates (add to your existing script)
+
+
+
+    function renderQuestionForm() {
+      const type = document.getElementById('questionType').value;
+      const form = document.getElementById('questionForm');
+      form.innerHTML = type === 'mcq' ? `
+        <textarea class="form-control bg-image hover-overlay ripple" data-mdb-ripple-color="light"  id="question" placeholder="Enter your MCQ question"></textarea>
+        <br>
+        <input type="text" id="optionA" placeholder="Option A">
+        <input type="text" id="optionB" placeholder="Option B">
+        <input type="text" id="optionC" placeholder="Option C">
+        <input type="text" id="optionD" placeholder="Option D">
+        <input type="file" id="questionImage" accept="image/*">
+        <button class="btn btn-danger" onclick="addMCQ()">➕ Add MCQ</button>
+      ` : `
+       <textarea class="form-control bg-image hover-overlay ripple" data-mdb-ripple-color="light" id="question" placeholder="Enter your Descriptive question"></textarea>
+       <br>
+        <select id="marks">
+          <option value="2">2 Marks</option>
+          <option value="5">5 Marks</option>
+          <option value="10">10 Marks</option>
+        </select>
+        <input type="file" id="questionImage" accept="image/*">
+        <button class="btn btn-danger" onclick="addDesc()">➕ Add Descriptive</button>
+      `;
+    }
+
+    renderQuestionForm();
+
+    function persistField(id) {
+  const input = document.getElementById(id);
+  input.addEventListener('input', () => {
+    sessionStorage.setItem(id, input.value);
+  });
+  const saved = sessionStorage.getItem(id);
+  if (saved) input.value = saved;
+}
+
+function getOptionsLayout(options) {
+  // Check if any option is longer than 30 characters or total length > 120
+  const hasLongOptions = options.some(opt => opt.length > 30);
+  const totalLength = options.join('').length;
+  
+  return (hasLongOptions || totalLength > 120) ? 'block-layout' : 'horizontal-layout';
+}
+['collegeName', 'department', 'subject', 'date', 'time', 'headingMCQ', 'heading2', 'heading5', 'heading10'].forEach(persistField);
+
+    function addMCQ() {
+      const q = document.getElementById("question").value;
+      const options = ["optionA", "optionB", "optionC", "optionD"].map(id => document.getElementById(id).value);
+      const fileInput = document.getElementById("questionImage");
+
+      
+      if (!q.trim()) {
+        alert("Please enter a question");
+        return;
+      }
+      
+      getImageBase64(fileInput, (img) => {
+        questions.push({ type: 'mcq', q, options, img });
+        sessionStorage.setItem("questions", JSON.stringify(questions));
+        renderPreview();
+        renderQuestionForm();
+      });
+    }
+
+    function addDesc() {
+      const q = document.getElementById("question").value;
+      const marks = document.getElementById("marks").value;
+      const fileInput = document.getElementById("questionImage");
+
+      
+      if (!q.trim()) {
+        alert("Please enter a question");
+        return;
+      }
+      
+      getImageBase64(fileInput, (img) => {
+        questions.push({ type: 'desc', q, marks, img });
+                sessionStorage.setItem("questions", JSON.stringify(questions));
+
+        renderPreview();
+        renderQuestionForm();
+      });
+    }
+
+   // Replace your renderPreview function with this corrected version
+function renderPreview() {
+  const preview = document.getElementById("preview");
+   const isDualPaper = document.getElementById('dualPaper').checked;
+  preview.innerHTML = `
+    <div style="text-align:center">
+      <img class="logo-preview" id="leftLogoPrev" style="float:left">
+      <img class="logo-preview" id="rightLogoPrev" style="float:right">
+      <h3>${document.getElementById('collegeName').value}</h3>
+      <div>${document.getElementById('department').value} - ${document.getElementById('subject').value}</div>
+      <div>Date: ${document.getElementById('date').value} &nbsp;&nbsp; Time: ${document.getElementById('time').value}</div>
+    </div>
+    <hr style="clear:both">
+    ${document.getElementById('marksDisplay').value ? `<div class="marks-display">${document.getElementById('marksDisplay').value}</div>` : ''}
+  `;
+
+  
+  const mcqs = questions.filter(q => q.type === 'mcq');
+  const descs = questions.filter(q => q.type === 'desc');
+  const layout = document.getElementById("layoutMode").value;
+
+  // MCQ Section
+  if (mcqs.length > 0) {
+    const mcqHeading = document.getElementById('headingMCQ').value || 'Objective Questions (MCQs)';
+    let headingStyle = '';
+    if (document.getElementById('mcqBold').checked) headingStyle += 'font-weight: bold; ';
+    if (document.getElementById('mcqUnderline').checked) headingStyle += 'text-decoration: underline; ';
+    
+    preview.innerHTML += `<div class='section-heading' style='${headingStyle}'>${mcqHeading}</div>`;
+    
+    if (layout === "two") {
+      const left = document.createElement('div');
+      const right = document.createElement('div');
+      left.className = 'column';
+      right.className = 'column';
+      
+      mcqs.forEach((q, i) => {
+        const originalIndex = questions.indexOf(q);
+        const optionsLayoutClass = getOptionsLayout(q.options);
+        const html = `
+          <div>
+            <b>Q${i + 1}. ${q.q}</b><br>
+            <div class="mcq-options ${optionsLayoutClass}">
+              <span class="mcq-option">A. ${q.options[0]}</span>
+              <span class="mcq-option">B. ${q.options[1]}</span>
+              ${optionsLayoutClass === 'horizontal-layout' ? '</div><div class="mcq-options ' + optionsLayoutClass + '">' : ''}
+              <span class="mcq-option">C. ${q.options[2]}</span>
+              <span class="mcq-option">D. ${q.options[3]}</span>
+            </div>
+            ${q.img ? `<img src="${q.img}" width="100">` : ''}
+            <button class="remove-btn btn btn-sm btn-danger" onclick="removeQuestion(${originalIndex})">🗑 Remove</button>
+            <hr>
+          </div>
+        `;
+        (i % 2 === 0 ? left : right).innerHTML += html;
+      });
+      
+      preview.innerHTML += `<div class='two-column'><div class='column'>${left.innerHTML}</div><div class='divider'></div><div class='column'>${right.innerHTML}</div></div>`;
+    } else {
+      mcqs.forEach((q, i) => {
+        const originalIndex = questions.indexOf(q);
+        const optionsLayoutClass = getOptionsLayout(q.options);
+        preview.innerHTML += `
+          <div class="question-block">
+            <b>Q${i + 1}. ${q.q}</b><br>
+            <div class="mcq-options ${optionsLayoutClass}">
+              <span class="mcq-option">A. ${q.options[0]}</span>
+              <span class="mcq-option">B. ${q.options[1]}</span>
+              <span class="mcq-option">C. ${q.options[2]}</span>
+              <span class="mcq-option">D. ${q.options[3]}</span>
+            </div>
+            ${q.img ? `<img src="${q.img}" width="100">` : ''}
+            <button class="remove-btn btn btn-sm btn-danger" onclick="removeQuestion(${originalIndex})">🗑 Remove</button>
+            <hr>
+          </div>
+        `;
+      });
+    }
+  }
+  
+
+  // ADD THIS DESCRIPTIVE SECTION (this was missing in your code)
+  if (descs.length > 0) {
+    [2, 5, 10].forEach(mark => {
+      const group = descs.filter(q => q.marks == mark);
+      if (group.length > 0) {
+        let headingText, boldChecked, underlineChecked;
+        if (mark === 2) {
+          headingText = document.getElementById('heading2').value || `${mark} Marks Questions`;
+          boldChecked = document.getElementById('h2Bold').checked;
+          underlineChecked = document.getElementById('h2Underline').checked;
+        } else if (mark === 5) {
+          headingText = document.getElementById('heading5').value || `${mark} Marks Questions`;
+          boldChecked = document.getElementById('h5Bold').checked;
+          underlineChecked = document.getElementById('h5Underline').checked;
+        } else {
+          headingText = document.getElementById('heading10').value || `${mark} Marks Questions`;
+          boldChecked = document.getElementById('h10Bold').checked;
+          underlineChecked = document.getElementById('h10Underline').checked;
+        }
+
+        let headingStyle = '';
+        if (boldChecked) headingStyle += 'font-weight: bold; ';
+        if (underlineChecked) headingStyle += 'text-decoration: underline; ';
+
+        preview.innerHTML += `<div class='section-heading' style='${headingStyle}'>${headingText}</div>`;
+        
+        group.forEach((q, i) => {
+          const originalIndex = questions.indexOf(q);
+          const questionNumber = questions.indexOf(q) + 1;
+          preview.innerHTML += `
+            <div class="question-block">
+              <b>Q${questionNumber}. (${q.marks}M) ${q.q}</b><br>
+              ${q.img ? `<img src="${q.img}" width="100" style="margin-top: 5px;">` : ''}
+              <button class="remove-btn btn btn-sm btn-danger" onclick="removeQuestion(${originalIndex})">🗑 Remove</button>
+              <hr>
+            </div>
+          `;
+        });
+      }
+    });
+    
+  }
+  
+ if (isDualPaper) {
+    preview.innerHTML += `
+      <div class="page-divider"></div>
+      <div style="text-align:center; margin-top: 20px;">
+        <h3>${document.getElementById('collegeName').value}</h3>
+        <div>${document.getElementById('department').value} - ${document.getElementById('subject').value}</div>
+        <div>Date: ${document.getElementById('date').value} &nbsp;&nbsp; Time: ${document.getElementById('time').value}</div>
+        ${document.getElementById('marksDisplay').value ? `<div class="marks-display">${document.getElementById('marksDisplay').value}</div>` : ''}
+      </div>
+      <hr>
+      <!-- Repeat questions here -->
+    `;
+  }
+}
+    function removeQuestion(index) {
+  if (index >= 0 && index < questions.length) {
+    questions.splice(index, 1);
+    sessionStorage.setItem("questions", JSON.stringify(questions));
+    renderPreview();
+  }
+}
+
+    function shuffleQuestions() {
+      for (let i = questions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questions[i], questions[j]] = [questions[j], questions[i]];
+      }
+    }
+
+    function shuffleAndRender() {
+      shuffleQuestions();
+      renderPreview();
+    }
+
+    function splitTextToLines(doc, text, maxWidth) {
+      const words = text.split(' ');
+      const lines = [];
+      let currentLine = '';
+      
+      words.forEach(word => {
+        const testLine = currentLine + (currentLine ? ' ' : '') + word;
+        const width = doc.getTextWidth(testLine);
+        
+        if (width > maxWidth && currentLine) {
+          lines.push(currentLine);
+          currentLine = word;
+        } else {
+          currentLine = testLine;
+        }
+      });
+      
+      if (currentLine) {
+        lines.push(currentLine);
+      }
+      
+      return lines;
+    }
+
+  async function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  // Get dual paper and marks display values
+  const isDualPaper = document.getElementById('dualPaper').checked;
+  const marksDisplay = document.getElementById('marksDisplay').value;
+  
+  let y = 40;
+  const questionsPerPage = parseInt(document.getElementById('questionsPerPage').value) || 0;
+  let currentQuestionCount = 0;
+
+  // Function to add header and marks
+  function addHeaderAndMarks(yPosition) {
+    // Add logos
+    if (logos.left) {
+      try {
+        doc.addImage(logos.left, 'JPEG', 10, yPosition, 20, 20);
+      } catch (e) {
+        console.log('Error adding left logo:', e);
+      }
+    }
+    if (logos.right) {
+      try {
+        doc.addImage(logos.right, 'JPEG', 180, yPosition, 20, 20);
+      } catch (e) {
+        console.log('Error adding right logo:', e);
+      }
+    }
+
+    // Header text
+    doc.setFontSize(16);
+    doc.text(document.getElementById('collegeName').value || 'College Name', 105, yPosition + 8, { align: 'center' });
+    doc.setFontSize(12);
+    const deptText = `${document.getElementById('department').value || 'Department'} - ${document.getElementById('subject').value || 'Subject'}`;
+    const date = document.getElementById('date').value || 'DD/MM/YYYY';
+    const time = document.getElementById('time').value || 'Time';
+    const dateTimeText = `Date: ${date}    Time: ${time}`;
+    doc.text(deptText, 105, yPosition + 16, { align: 'center' });
+    doc.text(dateTimeText, 105, yPosition + 22, { align: 'center' });
+
+    // Marks display
+    if (marksDisplay) {
+      doc.setFontSize(10);
+      doc.text(marksDisplay, 200, yPosition + 28, { align: 'right' });
+    }
+
+    // Line separator
+    doc.line(10, yPosition + 25, 200, yPosition + 25);
+    
+    return yPosition + 25;
+  }
+
+  // Function to render questions
+  function renderQuestions(startY) {
+    let currentY = startY;
+    const layout = document.getElementById("layoutMode").value;
+    const mcqs = questions.filter(q => q.type === 'mcq');
+    const descs = questions.filter(q => q.type === 'desc');
+    let questionCount = 0;
+
+    // MCQ Questions
+    if (mcqs.length > 0) {
+      const mcqHeading = document.getElementById('headingMCQ').value || 'Objective Questions (MCQs)';
+      const mcqBold = document.getElementById('mcqBold').checked;
+      const mcqUnderline = document.getElementById('mcqUnderline').checked;
+      
+      currentY += 5; // Space before MCQ heading
+      
+      doc.setFontSize(14);
+      if (mcqBold) doc.setFont(undefined, 'bold');
+      doc.text(mcqHeading, 10, currentY);
+      if (mcqUnderline) {
+        const textWidth = doc.getTextWidth(mcqHeading);
+        doc.line(10, currentY + 1, 10 + textWidth, currentY + 1);
+      }
+      doc.setFont(undefined, 'normal');
+      currentY += 5; // Space after MCQ heading
+
+      if (layout === "single") {
+        // Single column layout
+        mcqs.forEach((q, i) => {
+          if (currentY > 270) { 
+            return currentY; // Stop if we exceed page bounds
+          }
+
+          doc.setFontSize(11);
+          const questionLines = splitTextToLines(doc, `Q${i + 1}. ${q.q}`, 180);
+          questionLines.forEach(line => {
+            doc.text(line, 10, currentY);
+            currentY += 6;
+          });
+          currentY += 2;
+
+          doc.setFontSize(10);
+          
+          // Check if options are long and should be displayed vertically
+          const hasLongOptions = q.options.some(opt => opt.length > 25);
+          const totalLength = q.options.join('').length;
+          const shouldUseVertical = hasLongOptions || totalLength > 100;
+
+          if (shouldUseVertical) {
+            // Vertical layout for long options
+            q.options.forEach((option, optIndex) => {
+              const optionText = `${String.fromCharCode(65 + optIndex)}. ${option}`;
+              const optionLines = splitTextToLines(doc, optionText, 170);
+              optionLines.forEach(line => {
+                doc.text(line, 15, currentY);
+                currentY += 5;
+              });
+              currentY += 1;
+            });
+          } else {
+            // Horizontal layout for short options
+            const optionsText = `A. ${q.options[0]}    B. ${q.options[1]}    C. ${q.options[2]}    D. ${q.options[3]}`;
+            const optionLines = splitTextToLines(doc, optionsText, 180);
+            optionLines.forEach(line => {
+              doc.text(line, 15, currentY);
+              currentY += 5;
+            });
+          }
+          
+          currentY += 3;
+
+          // Add image if exists
+          if (q.img) {
+            try {
+              doc.addImage(q.img, 'JPEG', 20, currentY, 40, 20);
+              currentY += 20;
+            } catch (e) {
+              console.log('Error adding image:', e);
+            }
+          }
+
+          currentY += 1;
+          questionCount++;
+          
+          if (questionsPerPage > 0 && questionCount >= questionsPerPage) {
+            return currentY; // Stop if we reach questions per page limit
+          }
+        });
+      } else {
+        // Double column layout for MCQs
+        const leftX = 10;
+        const rightX = 110;
+        const colWidth = 90;
+        let leftY = currentY;
+        let rightY = currentY;
+        
+        const pageHeight = isDualPaper ? 140 : doc.internal.pageSize.height;
+        doc.line(105, currentY - 5, 105, Math.min(pageHeight - 20, 270));
+        
+        mcqs.forEach((q, i) => {
+          const isLeft = i % 2 === 0;
+          const currentX = isLeft ? leftX : rightX;
+          let questionY = isLeft ? leftY : rightY;
+          
+          if (questionY > 270) {
+            return;
+          }
+          
+          doc.setFontSize(10);
+          const questionLines = splitTextToLines(doc, `Q${i + 1}. ${q.q}`, colWidth);
+          questionLines.forEach(line => {
+            doc.text(line, currentX, questionY);
+            questionY += 5;
+          });
+          questionY += 2;
+          
+          doc.setFontSize(9);
+          
+          // Check if options are long for column layout
+          const hasLongOptions = q.options.some(opt => opt.length > 15);
+          const shouldUseVertical = hasLongOptions;
+
+          if (shouldUseVertical) {
+            // Vertical layout in column
+            q.options.forEach((option, optIndex) => {
+              const optionText = `${String.fromCharCode(65 + optIndex)}. ${option}`;
+              const optionLines = splitTextToLines(doc, optionText, colWidth - 5);
+              optionLines.forEach(line => {
+                doc.text(line, currentX, questionY);
+                questionY += 4;
+              });
+            });
+          } else {
+            // Horizontal layout in column
+            const optionsText = `A). ${q.options[0]}  B). ${q.options[1]}  C). ${q.options[2]}  D). ${q.options[3]}`;
+            const optionLines = splitTextToLines(doc, optionsText, colWidth);
+            optionLines.forEach(line => {
+              doc.text(line, currentX, questionY);
+              questionY += 4;
+            });
+          }
+          
+          questionY += 1;
+          
+          if (q.img) {
+            try {
+              doc.addImage(q.img, 'JPEG', currentX, questionY, 30, 15);
+              questionY += 18;
+            } catch (e) {
+              console.log('Error adding image:', e);
+            }
+          }
+          
+          if (isLeft) {
+            leftY = questionY;
+          } else {
+            rightY = questionY;
+          }
+        });
+        
+        currentY = Math.max(leftY, rightY);
+      }
+    }
+
+    // Descriptive Questions
+    if (descs.length > 0) {
+      [2, 5, 10].forEach(mark => {
+        const group = descs.filter(q => q.marks == mark);
+        if (group.length > 0) {
+          if (currentY > 250) { 
+            return currentY;
+          }
+
+          // Add space before heading
+          currentY += 5;
+
+          // Add heading
+          let headingText, boldChecked, underlineChecked;
+          if (mark === 2) {
+            headingText = document.getElementById('heading2').value || `${mark} Marks Questions`;
+            boldChecked = document.getElementById('h2Bold').checked;
+            underlineChecked = document.getElementById('h2Underline').checked;
+          } else if (mark === 5) {
+            headingText = document.getElementById('heading5').value || `${mark} Marks Questions`;
+            boldChecked = document.getElementById('h5Bold').checked;
+            underlineChecked = document.getElementById('h5Underline').checked;
+          } else {
+            headingText = document.getElementById('heading10').value || `${mark} Marks Questions`;
+            boldChecked = document.getElementById('h10Bold').checked;
+            underlineChecked = document.getElementById('h10Underline').checked;
+          }
+
+          doc.setFontSize(14);
+          if (boldChecked) doc.setFont(undefined, 'bold');
+          doc.text(headingText, 10, currentY);
+          if (underlineChecked) {
+            const textWidth = doc.getTextWidth(headingText);
+            doc.line(10, currentY + 1, 10 + textWidth, currentY + 1);
+          }
+          doc.setFont(undefined, 'normal');
+          currentY += 5; // Space after heading
+
+          // Add questions
+          group.forEach((q, i) => {
+            if (currentY > 270) { 
+              return;
+            }
+
+            doc.setFontSize(12);
+            const questionLines = splitTextToLines(doc, `Q${questions.indexOf(q) + 1}. (${q.marks}M) ${q.q}`, 180);
+            questionLines.forEach(line => {
+              doc.text(line, 10, currentY);
+              currentY += 4;
+            });
+
+            if (q.img) {
+              try {
+                doc.addImage(q.img, 'JPEG', 20, currentY + 2, 40, 20);
+                currentY += 22;
+              } catch (e) {
+                console.log('Error adding image:', e);
+              }
+            }
+
+            currentY += 2;
+            questionCount++;
+            
+            if (questionsPerPage > 0 && questionCount >= questionsPerPage) {
+              return currentY;
+            }
+          });
+        }
+      });
+    }
+    
+    return currentY;
+  }
+
+  // First paper header
+  y = addHeaderAndMarks(10);
+  
+  // Render first paper questions
+  y = renderQuestions(y);
+  
+  // If dual paper is enabled, add divider and second paper
+  if (isDualPaper) {
+    // Add horizontal divider line
+    const pageHeight = doc.internal.pageSize.height;
+    const middleY = pageHeight / 2;
+    doc.line(10, middleY, 200, middleY);
+    
+    // Second paper header
+    y = addHeaderAndMarks(middleY + 10);
+    
+    // Render second paper questions (same questions, you can shuffle if needed)
+    renderQuestions(y);
+  }
+  
+  // Add page numbers
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(9);
+    doc.text(`Page ${i} of ${pageCount}`, 200, 290, { align: 'right' });
+  }
+
+  doc.save("question-paper.pdf");
+}
+    // Logo event listeners
+    document.getElementById('leftLogo').addEventListener('change', (e) => {
+      getImageBase64(e.target, (img) => {
+        logos.left = img;
+        if (document.getElementById('leftLogoPrev')) {
+          document.getElementById('leftLogoPrev').src = img || '';
+        }
+      });
+    });
+
+    document.getElementById('rightLogo').addEventListener('change', (e) => {
+      getImageBase64(e.target, (img) => {
+        logos.right = img;
+        if (document.getElementById('rightLogoPrev')) {
+          document.getElementById('rightLogoPrev').src = img || '';
+        }
+      });
+    });
+
+    // Update preview when form fields change
+    ['collegeName', 'department', 'subject', 'date', 'headingMCQ', 'heading2', 'heading5', 'heading10'].forEach(id => {
+      document.getElementById(id).addEventListener('input', renderPreview);
+    });
+    
+    // Update preview when checkboxes change
+    ['mcqBold', 'mcqUnderline', 'h2Bold', 'h2Underline', 'h5Bold', 'h5Underline', 'h10Bold', 'h10Underline'].forEach(id => {
+      document.getElementById(id).addEventListener('change', renderPreview);
+    });
+
+
+    function clearSession() {
+  sessionStorage.clear();
+  questions = [];
+  document.querySelectorAll("input, textarea").forEach(input => input.value = "");
+  document.getElementById("layoutMode").value = "two";
+  renderPreview();
+  renderQuestionForm();
+}
+
+  </script>
+</body>
+</html>
